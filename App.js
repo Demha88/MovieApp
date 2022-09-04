@@ -8,7 +8,6 @@ import FavFilm from './src/screen/FavFilm';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //import { Icon } from 'react-native-vector-icons/Icon';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import NavBarContainer from './src/screen/NavBarContainer';
 
 
 
