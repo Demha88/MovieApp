@@ -1,30 +1,163 @@
-import { Text, View, Image, StyleSheet, ImageBackground } from "react-native";
-import { useState, useEffect } from "react";
-import { Button } from "react-native-paper";
+//import { StyleSheet, Text, View } from "react-native";
+import { useState, useEffect } from "react"
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from "react-native"
+import { TouchableOpacity } from "react-native";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FilmPopu from "./FilmPopu";
+import DetailFilm from "./DetailFilm";
 
-export default function FavFilm({navigation}){
+
+export default function FavFilm({route, navigation}) {
+
+    // const { item } = route?.params || {}
+    // console.log("favoris is", item)
+
+
+     const {listeFavoris} = route?.params || {}
+     console.log("favoris=", listeFavoris)
+     const [loading, setLoading] = useState(false)
+
+     
+     
+
+     const renderFooter = () => {
+      return (
+          loading ?
+              <View style={styles.loader}>
+                  <ActivityIndicator size="large" />
+              </View> : null
+      )
+  }
+  const handleLoadMore = () => {
+    console.log("handleLoadMore")
+    // if (!loading) {
+    //     setPage(page + 1)
+    //     setLoading(true)
+    // }
+}
+
+const renderItem = ({ item }) => {
+  return (
+      <View style={styles.itemRow}>
+          <TouchableHighlight onPress={() => navigation.navigate("DetailFilm", { item })}>
+              <Image
+                  source={{ uri: "https://image.tmdb.org/t/p/w300/" + item.poster_path }}
+                  style={styles.itemImage}
+              />
+          </TouchableHighlight>
+          <View style={styles.itemInfo}>
+              <Text style={styles.itemText}>{item.original_title} </Text>
+              <Text style={styles.itemText2}>Rating: {item.vote_average}</Text>
+              {/* <TouchableOpacity
+               // onPress={() => console.log('Favoris Removed!')}
+               onPress={() => removeFavoris(item)}
+                activeOpacity={0.7}
+                style={{
+                  paddingLeft: 10,
+                  marginTop: 15,
+                  borderRadius: 20,
+                  height: 40,
+                  width: 40,
+                }}>
+                <MaterialIcons
+                  //name={ifExists(item) ? "favorite" : "favorite-outline"}    
+                  color="red"
+                  size={27}
+                  name="favorite"
+                />
+              </TouchableOpacity> */}
+          </View>
+
+
+      </View>
+  )
+}
 
 return(
 
-<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Films favoris</Text>
-      <Button style={{ width: 200}}
-        color="blue"
-        title="Go to Details"
-        onPress={() => navigation.navigate('DetailFilm')}
-      />
-    </View>
+    <View style={styles.container}>
+        {/* <Text>Favoris Screen!</Text> */}
 
-);
+        <FlatList
+                style={styles.container}
+                data={listeFavoris}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderItem}
+                ListFooterComponent={renderFooter}
+                onEndReached={handleLoadMore}
+                onEndReachedThreshold={0.5}
+
+            />
+    </View>
+)
 
 
 }
 
-// const styles = StyleSheet.create({
-//       container: {
-//         flex: 1,
-//        // backgroundColor: '#ccc',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//       },
-//     });
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      //   alignItems: 'center',
+      //   justifyContent: 'center',
+      // marginTop: 0,
+      paddingTop: 5,
+      backgroundColor: "darkslategrey",
+
+
+
+  },
+  itemRow: {
+      flexDirection: "row",
+      borderBottomColor: '#ccc',
+      marginBottom: 10,
+      alignItems: "center",
+
+      //borderBottomWidth: 10,
+      //borderRadius: 20
+  },
+  itemImage: {
+      // width: '100%',
+      flex: 1,
+      height: 250,
+      width: 200,
+      resizeMode: 'cover',
+      borderRadius: 20,
+      marginLeft: 5
+  },
+  itemInfo: {
+      flex: 1,
+      marginBottom:60
+  },
+  itemText: {
+      // flexDirection:"row",
+      fontSize: 13,
+      fontWeight: "bold",
+      textTransform: "uppercase",
+
+      //textAlign: "center",
+      color: "white",
+      paddingLeft: 10,
+      marginTop: 15
+
+  },
+  itemText2: {
+      fontSize: 13,
+      fontWeight: "normal",
+      textTransform: "uppercase",
+      //textAlign:"center",
+      color: "white",
+      paddingLeft: 10,
+      marginTop: 15
+  },
+  loader: {
+      marginTop: 10,
+      alignItems: "center"
+  },
+  text: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      fontColor: '#010101'
+    }
+});
+  
